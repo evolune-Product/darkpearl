@@ -2,6 +2,7 @@
 	import { goto } from "$app/navigation"
 	import { onMount } from "svelte"
 	import { auth, pb } from "$lib/pocketbase.svelte"
+	import Footer from "$lib/components/Footer.svelte"
 	import { Loader2 } from "lucide-svelte"
 
 	let email = $state("")
@@ -73,7 +74,7 @@
 	<title>Register - darkpearl</title>
 </svelte:head>
 
-<div class="min-h-screen bg-[var(--builder-bg-primary)] flex items-center justify-center p-4 safe-area-top safe-area-bottom">
+<div class="min-h-screen bg-[var(--builder-bg-primary)] flex items-center justify-center p-4 safe-area-top safe-area-bottom relative">
 	{#if is_checking}
 		<div class="flex flex-col items-center gap-3">
 			<Loader2 class="w-8 h-8 text-[var(--builder-accent)] animate-spin" />
@@ -174,6 +175,15 @@
 			Already have an account?
 			<a href="/login" class="text-[var(--builder-accent)] hover:underline">Sign in</a>
 		</p>
+
+		<p class="mt-3 text-center text-sm text-[var(--builder-text-muted)]">
+			<a href="/landing" class="hover:text-[var(--builder-text-secondary)] transition-colors">Learn more about darkpearl</a>
+		</p>
 	</div>
 	{/if}
+
+	<!-- Footer -->
+	<div class="absolute bottom-0 left-0 right-0">
+		<Footer />
+	</div>
 </div>

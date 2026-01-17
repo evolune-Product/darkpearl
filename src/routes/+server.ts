@@ -36,6 +36,6 @@ export const GET: RequestHandler = async ({ locals }) => {
 		throw redirect(302, '/darkpearl/studio')
 	}
 
-	// No project for this domain - redirect to home page
-	throw redirect(302, '/darkpearl')
+	// No project for this domain - redirect to landing page
+	throw redirect(302, '/landing')
 }

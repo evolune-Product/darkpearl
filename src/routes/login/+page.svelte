@@ -2,6 +2,7 @@
 	import { goto } from "$app/navigation"
 	import { onMount } from "svelte"
 	import { auth } from "$lib/pocketbase.svelte"
+	import Footer from "$lib/components/Footer.svelte"
 	import { Loader2 } from "lucide-svelte"
 
 	let email = $state("")
@@ -155,9 +156,18 @@
 				Don't have an account?
 				<a href="/register" class="text-purple-400 hover:text-purple-300 transition-colors">Sign up</a>
 			</p>
+
+			<p class="mt-3 text-center text-sm text-gray-500">
+				<a href="/landing" class="hover:text-gray-400 transition-colors">Learn more about darkpearl</a>
+			</p>
 		</div>
 	</div>
 	{/if}
+
+	<!-- Footer -->
+	<div class="absolute bottom-0 left-0 right-0">
+		<Footer />
+	</div>
 </div>
 
 <style>
