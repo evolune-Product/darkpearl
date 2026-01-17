@@ -158,7 +158,7 @@
 			</p>
 
 			<p class="mt-3 text-center text-sm text-gray-500">
-				<a href="/landing" class="hover:text-gray-400 transition-colors">Learn more about darkpearl</a>
+				<a href="/" class="hover:text-gray-400 transition-colors">Learn more about darkpearl</a>
 			</p>
 		</div>
 	</div>

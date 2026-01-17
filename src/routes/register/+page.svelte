@@ -177,7 +177,7 @@
 		</p>
 
 		<p class="mt-3 text-center text-sm text-[var(--builder-text-muted)]">
-			<a href="/landing" class="hover:text-[var(--builder-text-secondary)] transition-colors">Learn more about darkpearl</a>
+			<a href="/" class="hover:text-[var(--builder-text-secondary)] transition-colors">Learn more about darkpearl</a>
 		</p>
 	</div>
 	{/if}

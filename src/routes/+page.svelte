@@ -20,6 +20,8 @@
 		Check
 	} from "lucide-svelte"
 
+	let { data } = $props()
+
 	// If already authenticated, redirect to dashboard
 	onMount(() => {
 		if (auth.is_authenticated) {
