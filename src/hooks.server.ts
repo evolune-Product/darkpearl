@@ -67,6 +67,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 			headers.delete('host')
 			// Don't request compressed responses - let the outer server handle compression
 			headers.delete('accept-encoding')
+			// Remove hop-by-hop headers that cause issues with Node.js fetch/undici
+			headers.delete('connection')
+			headers.delete('keep-alive')
+			headers.delete('transfer-encoding')
+			headers.delete('upgrade')
 
 			const response = await fetch(targetUrl, {
 				method: event.request.method,
