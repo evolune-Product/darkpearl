@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(move \"E:\\\\tinykit-main\\\\src\\\\routes\\\\tinykit\" \"E:\\\\tinykit-main\\\\src\\\\routes\\\\darkpearl\")",
+      "Bash(move \"E:\\\\tinykit-main\\\\src\\\\routes\\\\_tk\" \"E:\\\\tinykit-main\\\\src\\\\routes\\\\_dp\")",
+      "Bash(grep:*)",
+      "Bash(for file in src/lib/templates/bookmarks.json src/lib/templates/canvas.json src/lib/templates/hn-reader.json src/lib/templates/recipes.json src/lib/templates/rss-reader.json src/lib/templates/voice-memo.json)",
+      "Bash(do sed -i \"s/$tinykit/$darkpearl/g\" \"$file\")",
+      "Bash(done)",
+      "Bash(find:*)",
+      "Bash(echo:*)",
+      "Bash(npm run dev:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill /F /PID 7224)",
+      "Bash(taskkill //F //PID 7224)",
+      "Bash(claude doctor)",
+      "Bash(npm run check:*)",
+      "Bash(npx svelte-check:*)",
+      "Bash(copy:*)",
+      "mcp__ide__getDiagnostics"
+    ]
+  }
+}

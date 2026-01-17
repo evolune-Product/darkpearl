@@ -1,0 +1,42 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#080812"/>
+    </radialGradient>
+    <radialGradient id="pearlGrad" cx="35%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#4a3a6a"/>
+      <stop offset="50%" stop-color="#2a1a4a"/>
+      <stop offset="100%" stop-color="#150a25"/>
+    </radialGradient>
+    <linearGradient id="ringGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="50%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+    <linearGradient id="ringGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="url(#bgGrad)"/>
+
+  <!-- Outer ring -->
+  <ellipse cx="16" cy="18" rx="12" ry="4" fill="none" stroke="url(#ringGrad1)" stroke-width="0.8" opacity="0.6"/>
+
+  <!-- Middle ring -->
+  <ellipse cx="16" cy="18" rx="9" ry="3" fill="none" stroke="url(#ringGrad2)" stroke-width="0.8" opacity="0.8"/>
+
+  <!-- Inner ring -->
+  <ellipse cx="16" cy="18" rx="6" ry="2" fill="none" stroke="url(#ringGrad1)" stroke-width="0.8" opacity="0.9"/>
+
+  <!-- Pearl sphere -->
+  <circle cx="16" cy="14" r="5" fill="url(#pearlGrad)"/>
+
+  <!-- Pearl highlight -->
+  <circle cx="14" cy="12.5" r="1.5" fill="#6b4a8a" opacity="0.5"/>
+  <circle cx="14.5" cy="12" r="0.8" fill="#9a7aba" opacity="0.6"/>
+</svg>

@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	/* Legacy vars - dark pearl theme */
+	--bg-primary: #080812;
+	--bg-secondary: #0d0d1a;
+	--bg-tertiary: #141428;
+	--text-primary: #ffffff;
+	--text-secondary: #a0a0b0;
+	--accent: #a855f7;
+	--border: #252538;
+
+	/* Builder theme (customizable) - dark pearl inspired */
+	--builder-bg-primary: #080812;
+	--builder-bg-secondary: #0d0d1a;
+	--builder-bg-tertiary: #141428;
+	--builder-bg-hover: #1a1a30;
+	--builder-accent: #a855f7;
+	--builder-accent-hover: #9333ea;
+	--builder-text-primary: #ffffff;
+	--builder-text-secondary: #9090a0;
+	--builder-text-muted: #606075;
+	--builder-border: #252538;
+
+	/* Tool button colors - dark pearl theme */
+	/* Purple and cyan as primary accents matching the dark pearl image */
+	--tool-code: #a855f7;
+	/* purple - primary accent (code/default) */
+	--tool-content: #06b6d4;
+	/* cyan (content) */
+	--tool-design: #ec4899;
+	/* pink (design) */
+	--tool-data: #06b6d4;
+	/* cyan (data) */
+	--tool-success: #10b981;
+	/* emerald - confirmations */
+
+	/* shadcn/ui theme (dark) */
+	--background: 0 0% 4%;
+	--foreground: 0 0% 98%;
+	--card: 0 0% 7%;
+	--card-foreground: 0 0% 98%;
+	--popover: 0 0% 7%;
+	--popover-foreground: 0 0% 98%;
+	--primary: 217 91% 60%;
+	--primary-foreground: 0 0% 100%;
+	--secondary: 0 0% 15%;
+	--secondary-foreground: 0 0% 98%;
+	--muted: 0 0% 15%;
+	--muted-foreground: 0 0% 64%;
+	--accent: 0 0% 15%;
+	--accent-foreground: 0 0% 98%;
+	--destructive: 0 84% 60%;
+	--destructive-foreground: 0 0% 98%;
+	--border: 0 0% 20%;
+	--input: 0 0% 20%;
+	--ring: 217 91% 60%;
+	--radius: 0.25rem;
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+	background-color: var(--bg-primary);
+	color: var(--text-primary);
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* iOS safe area support */
+.safe-area-top {
+	padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+	padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Dynamic viewport height for iOS - accounts for browser chrome */
+.h-dvh {
+	height: 100dvh;
+}
+
+/* Prevent page scroll on builder pages (full-screen app) */
+html.no-scroll,
+html.no-scroll body {
+	height: 100%;
+	overflow: hidden;
+	/* Prevent iOS bounce scroll */
+	overscroll-behavior: none;
+	/* Disable pull-to-refresh */
+	-webkit-overflow-scrolling: touch;
+}
+
+/* Allow scrolling within specific containers */
+html.no-scroll .overflow-auto,
+html.no-scroll .overflow-y-auto,
+html.no-scroll .overflow-x-auto,
+html.no-scroll .overflow-y-scroll,
+html.no-scroll .overflow-x-scroll {
+	touch-action: pan-x pan-y;
+	-webkit-overflow-scrolling: touch;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--builder-bg-tertiary);
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--builder-bg-hover);
+}
+
+::-webkit-scrollbar-corner {
+	background: transparent;
+}
+
+/* Firefox */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--builder-bg-tertiary) transparent;
+}
