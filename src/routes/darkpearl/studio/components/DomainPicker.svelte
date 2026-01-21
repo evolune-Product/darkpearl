@@ -196,7 +196,7 @@
 						<span class="text-sm font-medium text-[var(--builder-text-secondary)]">
 							Detected domains
 						</span>
-						<div class="space-y-1">
+						<div class="space-y-1 max-h-48 overflow-y-auto">
 							{#each available_domains as domain (domain.hostname)}
 								<button
 									type="button"
