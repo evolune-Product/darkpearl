@@ -699,9 +699,56 @@ type AvailableDomain = {
 	last_seen: string
 }
 
+// Blocklist for inappropriate/spam domains (partial matches)
+const BLOCKED_DOMAIN_PATTERNS = [
+	// Adult/NSFW
+	'porn', 'xxx', 'sex', 'adult', 'nsfw', 'xvideo', 'xhamster', 'xnxx',
+	'redtube', 'youporn', 'brazzers', 'onlyfans', 'chaturbate', 'livejasmin',
+	'cam4', 'stripchat', 'bongacams', 'myfreecams', 'faphouse', 'spankbang',
+	// Gambling
+	'casino', 'poker', 'betting', 'gambl', 'slots', 'lottery',
+	// Spam/malware common patterns
+	'viagra', 'cialis', 'pharma', 'pills', 'drugs',
+	// Common crawler/bot domains
+	'googlebot', 'bingbot', 'yandex', 'baidu', 'crawl',
+]
+
+// Exact domain blocklist
+const BLOCKED_DOMAINS = new Set([
+	'pornhub.com', 'xvideos.com', 'xhamster.com', 'xnxx.com',
+	'redtube.com', 'youporn.com', 'tube8.com', 'spankbang.com',
+	'api.cliproxy.com', 'cliproxy.com',
+])
+
+/**
+ * Check if a hostname should be blocked from tracking
+ */
+function isBlockedDomain(hostname: string): boolean {
+	const lower = hostname.toLowerCase()
+
+	// Block raw IP addresses (v4 and v6)
+	if (/^(\d{1,3}\.){3}\d{1,3}$/.test(hostname) || hostname.includes(':')) {
+		return true
+	}
+
+	// Check exact blocklist
+	if (BLOCKED_DOMAINS.has(lower)) {
+		return true
+	}
+
+	// Check partial patterns
+	for (const pattern of BLOCKED_DOMAIN_PATTERNS) {
+		if (lower.includes(pattern)) {
+			return true
+		}
+	}
+
+	return false
+}
+
 /**
  * Track an incoming hostname as available (not assigned to any project)
- * Ignores localhost and common dev domains
+ * Ignores localhost, dev domains, and blocked domains
  */
 export async function trackAvailableDomain(hostname: string): Promise<void> {
 	// Skip localhost and dev domains
@@ -711,6 +758,11 @@ export async function trackAvailableDomain(hostname: string): Promise<void> {
 		hostname.startsWith('127.0.0.1') ||
 		hostname.endsWith('.local')
 	) {
+		return
+	}
+
+	// Skip blocked/inappropriate domains
+	if (isBlockedDomain(hostname)) {
 		return
 	}
 
@@ -776,7 +828,8 @@ export async function getAvailableDomains(): Promise<AvailableDomain[]> {
 		const projects = await listProjects()
 		const assigned = new Set(projects.map(p => p.domain).filter(Boolean))
 
-		return domains.filter(d => !assigned.has(d.hostname))
+		// Filter out assigned domains AND blocked domains
+		return domains.filter(d => !assigned.has(d.hostname) && !isBlockedDomain(d.hostname))
 	} catch {
 		return []
 	}
