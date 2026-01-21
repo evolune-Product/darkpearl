@@ -59,11 +59,15 @@
   );
 
   // Sync kit filter to URL query param using SvelteKit's shallow routing
-  let mounted = $state(false);
+  // Track if this is a user-initiated change vs automatic selection
+  let user_changed_kit = $state(false);
   $effect(() => {
     // Read selected_kit_id to establish dependency
     const kit_id = selected_kit_id;
-    if (!mounted) return;
+
+    // Only update URL on user-initiated changes, not automatic kit selection
+    // This prevents corrupting browser history on initial page load
+    if (!user_changed_kit) return;
 
     // Use untrack to read URL without creating a dependency (prevents infinite loop)
     const current_kit = untrack(() => $page.url.searchParams.get("kit"));
@@ -81,7 +85,6 @@
   });
 
   onMount(async () => {
-    mounted = true;
     const theme = get_saved_theme();
     apply_builder_theme(theme);
 
@@ -257,7 +260,7 @@
           <div class="flex items-center gap-2">
             {#each kits as kit (kit.id)}
               <button
-                onclick={() => (selected_kit_id = kit.id)}
+                onclick={() => { user_changed_kit = true; selected_kit_id = kit.id; }}
                 class="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all whitespace-nowrap select-none {selected_kit_id ===
                 kit.id
                   ? 'bg-[var(--builder-accent)] text-[var(--builder-accent-text)]'
@@ -269,7 +272,7 @@
             {/each}
             {#if has_uncategorized}
               <button
-                onclick={() => (selected_kit_id = "_uncategorized")}
+                onclick={() => { user_changed_kit = true; selected_kit_id = "_uncategorized"; }}
                 class="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all whitespace-nowrap select-none {selected_kit_id === '_uncategorized'
                   ? 'bg-[var(--builder-accent)] text-[var(--builder-accent-text)]'
                   : 'bg-[var(--builder-bg-secondary)] text-[var(--builder-text-secondary)] hover:text-[var(--builder-text-primary)] hover:bg-[var(--builder-bg-tertiary)]'}"
