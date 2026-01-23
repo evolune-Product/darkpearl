@@ -135,7 +135,7 @@
 
     <!-- CTA Buttons -->
     <div class="cta-group">
-      <a href="/darkpearl/new" class="btn-primary">
+      <a href="/darkpearl/new-kit" class="btn-primary">
         <Plus class="w-5 h-5" />
         <span>Start Building</span>
         <div class="btn-shine"></div>

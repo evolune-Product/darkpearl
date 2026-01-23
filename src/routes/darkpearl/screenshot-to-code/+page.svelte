@@ -21,20 +21,50 @@
 	let is_authenticated = $state(false);
 	let view_mode = $state<'code' | 'preview'>('code');
 
+	// Clean code derived value
+	let cleaned_code = $derived(clean_code(generated_code));
+
 	// Generate preview HTML for iframe
 	let preview_html = $derived.by(() => {
-		if (!generated_code) return '';
+		if (!cleaned_code) return '';
 
 		const styleTag = 'sty' + 'le';
 		const scriptTag = 'scr' + 'ipt';
-		const styleMatch = generated_code.match(new RegExp(`<${styleTag}[^>]*>([\\s\\S]*?)<\\/${styleTag}>`, 'i'));
 
-		let template = generated_code
+		// Extract styles
+		const styleMatch = cleaned_code.match(new RegExp(`<${styleTag}[^>]*>([\\s\\S]*?)<\\/${styleTag}>`, 'i'));
+		const styles = styleMatch ? styleMatch[1] : '';
+
+		// Extract template (remove script and style tags)
+		let template = cleaned_code
 			.replace(new RegExp(`<${scriptTag}[^>]*>[\\s\\S]*?<\\/${scriptTag}>`, 'gi'), '')
 			.replace(new RegExp(`<${styleTag}[^>]*>[\\s\\S]*?<\\/${styleTag}>`, 'gi'), '')
 			.trim();
 
-		const styles = styleMatch ? styleMatch[1] : '';
+		// Convert Svelte syntax to static HTML for preview
+		// Replace onclick handlers with data attributes (won't execute but won't show as text)
+		template = template.replace(/\s+onclick=\{[^}]+\}/g, '');
+		template = template.replace(/\s+on:click=\{[^}]+\}/g, '');
+
+		// Remove Svelte-specific bindings that won't work in static HTML
+		template = template.replace(/\s+bind:[a-z]+=[{"][^}"]*[}"]/gi, '');
+
+		// Remove Svelte logic blocks for preview (show content without logic)
+		template = template.replace(/\{#if[^}]*\}/g, '');
+		template = template.replace(/\{:else[^}]*\}/g, '');
+		template = template.replace(/\{\/if\}/g, '');
+		template = template.replace(/\{#each[^}]*\}/g, '');
+		template = template.replace(/\{\/each\}/g, '');
+		template = template.replace(/\{#await[^}]*\}/g, '');
+		template = template.replace(/\{:then[^}]*\}/g, '');
+		template = template.replace(/\{:catch[^}]*\}/g, '');
+		template = template.replace(/\{\/await\}/g, '');
+
+		// Remove variable interpolations like {variable} - replace with placeholder
+		template = template.replace(/\{[a-zA-Z_][a-zA-Z0-9_]*\}/g, '');
+
+		// Clean up any remaining curly brace expressions
+		template = template.replace(/\{[^}]*\}/g, '');
 
 		return `<!DOCTYPE html>
 <html>
@@ -42,9 +72,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <${'script'} src="https://cdn.tailwindcss.com"></${'script'}>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <${'style'}>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: system-ui, -apple-system, sans-serif; min-height: 100vh; }
+body { font-family: 'Inter', system-ui, -apple-system, sans-serif; min-height: 100vh; background: #fff; }
 ${styles}
 </${'style'}>
 </head>
@@ -113,6 +144,20 @@ ${styles}
 	function clear_screenshot() {
 		screenshot_file = null;
 		screenshot_preview = null;
+	}
+
+	// Clean generated code by removing markdown wrappers
+	function clean_code(code: string): string {
+		let cleaned = code.trim();
+
+		// Remove markdown code block wrappers (```svelte, ```html, ```, etc.)
+		cleaned = cleaned.replace(/^```(?:svelte|html|typescript|ts|javascript|js)?\s*\n?/i, '');
+		cleaned = cleaned.replace(/\n?```\s*$/i, '');
+
+		// Remove any leading/trailing backticks that might remain
+		cleaned = cleaned.replace(/^`+|`+$/g, '');
+
+		return cleaned.trim();
 	}
 
 	// Convert file to base64
@@ -209,7 +254,7 @@ ${styles}
 	// Copy code to clipboard
 	async function copy_code() {
 		try {
-			await navigator.clipboard.writeText(generated_code);
+			await navigator.clipboard.writeText(cleaned_code);
 			copied = true;
 			setTimeout(() => (copied = false), 2000);
 		} catch {
@@ -219,12 +264,12 @@ ${styles}
 
 	// Create new project with generated code
 	async function create_project() {
-		if (!generated_code) return;
+		if (!cleaned_code) return;
 
 		try {
 			const project = await project_service.create({
 				name: `Screenshot Project ${new Date().toLocaleDateString()}`,
-				frontend_code: generated_code
+				frontend_code: cleaned_code
 			});
 
 			// Open in new tab
@@ -236,8 +281,8 @@ ${styles}
 
 	// Download as Svelte file
 	function download_svelte() {
-		if (!generated_code) return;
-		const blob = new Blob([generated_code], { type: 'text/plain' });
+		if (!cleaned_code) return;
+		const blob = new Blob([cleaned_code], { type: 'text/plain' });
 		const url = URL.createObjectURL(blob);
 		const a = document.createElement('a');
 		a.href = url;
@@ -250,15 +295,15 @@ ${styles}
 
 	// Download as standalone HTML
 	function download_html() {
-		if (!generated_code) return;
+		if (!cleaned_code) return;
 
 		// Extract script, template, and style from Svelte code
 		const styleTag = 'sty' + 'le';
 		const scriptTag = 'scr' + 'ipt';
-		const styleMatch = generated_code.match(new RegExp(`<${styleTag}[^>]*>([\\s\\S]*?)<\\/${styleTag}>`, 'i'));
+		const styleMatch = cleaned_code.match(new RegExp(`<${styleTag}[^>]*>([\\s\\S]*?)<\\/${styleTag}>`, 'i'));
 
 		// Get template (everything that's not script or style)
-		let template = generated_code
+		let template = cleaned_code
 			.replace(new RegExp(`<${scriptTag}[^>]*>[\\s\\S]*?<\\/${scriptTag}>`, 'gi'), '')
 			.replace(new RegExp(`<${styleTag}[^>]*>[\\s\\S]*?<\\/${styleTag}>`, 'gi'), '')
 			.trim();
@@ -443,7 +488,7 @@ ${styles}
 						<h2 class="text-xl font-semibold text-[var(--builder-text-primary)]">
 							{#if view_mode === 'code'}Generated Code{:else}Preview{/if}
 						</h2>
-						{#if generated_code}
+						{#if cleaned_code}
 							<p class="text-sm text-[var(--builder-text-secondary)]">
 								Your Svelte 5 component is ready
 							</p>
@@ -451,7 +496,7 @@ ${styles}
 					</div>
 
 					<!-- Controls Row -->
-					{#if generated_code}
+					{#if cleaned_code}
 						<div class="flex flex-wrap items-center gap-2">
 							<!-- View Toggle -->
 							<div class="flex rounded-lg border border-[var(--builder-border)] p-1">
@@ -523,9 +568,9 @@ ${styles}
 								<p class="text-[var(--builder-text-secondary)]">Analyzing screenshot...</p>
 							</div>
 						</div>
-					{:else if generated_code}
+					{:else if cleaned_code}
 						{#if view_mode === 'code'}
-							<pre class="h-[400px] overflow-auto p-4 whitespace-pre-wrap font-mono text-sm text-[var(--builder-text-primary)]">{generated_code}</pre>
+							<pre class="h-[400px] overflow-auto p-4 whitespace-pre-wrap font-mono text-sm text-[var(--builder-text-primary)]">{cleaned_code}</pre>
 						{:else}
 							<iframe
 								srcdoc={preview_html}

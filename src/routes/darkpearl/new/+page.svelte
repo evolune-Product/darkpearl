@@ -70,9 +70,9 @@
     const theme = get_saved_theme();
     apply_builder_theme(theme);
 
-    // Redirect to new-kit if no kit param
+    // Redirect to new-kit if no kit param (use replaceState to avoid back-button loop)
     if (!kit_id) {
-      goto("/darkpearl/new-kit");
+      goto("/darkpearl/new-kit", { replaceState: true });
       return;
     }
 

@@ -91,9 +91,9 @@
     // Load data
     await Promise.all([load_projects(), load_kits()]);
 
-    // First-time user with no projects? Guide them to create one
+    // First-time user with no projects? Guide them to create one (use replaceState to avoid back-button loop)
     if (projects.length === 0 && kits.length === 0) {
-      goto("/darkpearl/new-kit");
+      goto("/darkpearl/new-kit", { replaceState: true });
     }
   });
 

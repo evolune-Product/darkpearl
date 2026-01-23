@@ -56,7 +56,7 @@
 	<title>Login - darkpearl</title>
 </svelte:head>
 
-<div class="min-h-screen flex items-center justify-center p-4 safe-area-top safe-area-bottom relative overflow-hidden"
+<div class="min-h-screen flex items-center justify-center p-4 pb-32 safe-area-top safe-area-bottom relative overflow-hidden"
 	style="background: linear-gradient(135deg, #080812 0%, #0a0a14 50%, #0d0d1a 100%);">
 
 	<!-- Background image with pearl -->

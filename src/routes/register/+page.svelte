@@ -74,7 +74,7 @@
 	<title>Register - darkpearl</title>
 </svelte:head>
 
-<div class="min-h-screen bg-[var(--builder-bg-primary)] flex items-center justify-center p-4 safe-area-top safe-area-bottom relative">
+<div class="min-h-screen bg-[var(--builder-bg-primary)] flex items-center justify-center p-4 pb-32 safe-area-top safe-area-bottom relative">
 	{#if is_checking}
 		<div class="flex flex-col items-center gap-3">
 			<Loader2 class="w-8 h-8 text-[var(--builder-accent)] animate-spin" />
