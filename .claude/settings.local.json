@@ -19,7 +19,8 @@
       "Bash(npx svelte-check:*)",
       "Bash(copy:*)",
       "mcp__ide__getDiagnostics",
-      "WebSearch"
+      "WebSearch",
+      "Bash(.pocketbase.exe superuser upsert:*)"
     ]
   }
 }

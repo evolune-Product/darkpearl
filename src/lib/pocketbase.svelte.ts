@@ -126,6 +126,22 @@ class AuthStore {
 		this.error = null
 	}
 
+	async loginWithGoogle(): Promise<AuthModel> {
+		this.error = null
+		this.is_loading = true
+
+		try {
+			const auth_data = await pb.collection('users').authWithOAuth2({ provider: 'google' })
+			this.user = auth_data.record
+			return auth_data.record
+		} catch (err: any) {
+			this.error = err.message || 'Google login failed'
+			throw err
+		} finally {
+			this.is_loading = false
+		}
+	}
+
 	// Refresh auth token if needed
 	async refresh(): Promise<void> {
 		if (!pb.authStore.isValid) return
